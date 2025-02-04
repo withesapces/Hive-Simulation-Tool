@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Hive Simulation Tool</title>
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
-
 <body>
   <div class="container">
     <header>
@@ -18,7 +16,7 @@
         <button class="nb-btn" data-lang="fr">Français</button>
       </div>
     </header>
-
+    
     <!-- Carte de saisie des paramètres -->
     <section class="nb-card">
       <h2 class="nb-heading" data-i18n="simulationParameters">Simulation Parameters</h2>
@@ -42,36 +40,28 @@
           <p class="form-note" data-i18n="hpPercentNote">(The remainder will be automatically allocated to HBD.)</p>
         </div>
         <div class="form-group">
-          <label for="annualInterestHP" class="nb-label" data-i18n="annualInterestHPLabel">Annual interest rate for HP
-            (%):</label>
-          <input type="number" id="annualInterestHP" name="annualInterestHP" class="nb-input" value="3" step="0.01"
-            required>
+          <label for="annualInterestHP" class="nb-label" data-i18n="annualInterestHPLabel">Annual interest rate for HP (%):</label>
+          <input type="number" id="annualInterestHP" name="annualInterestHP" class="nb-input" value="3" step="0.01" required>
         </div>
         <div class="form-group">
-          <label for="annualInterestHBD" class="nb-label" data-i18n="annualInterestHBDLabel">Annual interest rate for
-            HBD (%):</label>
-          <input type="number" id="annualInterestHBD" name="annualInterestHBD" class="nb-input" value="15" step="0.01"
-            required>
+          <label for="annualInterestHBD" class="nb-label" data-i18n="annualInterestHBDLabel">Annual interest rate for HBD (%):</label>
+          <input type="number" id="annualInterestHBD" name="annualInterestHBD" class="nb-input" value="15" step="0.01" required>
         </div>
         <div class="form-group">
-          <label for="simulationYears" class="nb-label" data-i18n="simulationYearsLabel">Simulation duration
-            (years):</label>
+          <label for="simulationYears" class="nb-label" data-i18n="simulationYearsLabel">Simulation duration (years):</label>
           <input type="number" id="simulationYears" name="simulationYears" class="nb-input" value="42" min="1" required>
         </div>
         <button id="simulateButton" type="submit" class="nb-btn" data-i18n="simulateButton">Simulate</button>
       </form>
     </section>
-
+    
     <!-- Carte d'affichage des résultats -->
     <section id="results" class="nb-card">
       <!-- Les résultats s'afficheront ici -->
     </section>
   </div>
+  <script src="assets/js/simulation.js"></script>
   <script src="assets/js/translations.js"></script>
   <script src="assets/js/language.js"></script>
-  <script src="assets/js/simulation.js"></script>
-  <script src="assets/js/pagination.js"></script>
-  <script src="assets/js/main.js"></script>
 </body>
-
 </html>

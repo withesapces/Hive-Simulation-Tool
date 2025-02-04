@@ -5,6 +5,3 @@
     translations.js
     language.js
     simulation.js
-    pagination.js
-    chart.js
-    main.js
