@@ -3,7 +3,7 @@ document.getElementById("simulationForm").addEventListener("submit", function(ev
   
   // Récupération des valeurs saisies
   let tokensHP = parseFloat(document.getElementById("currentHP").value) || 0;
-  let currentHP = tokensHP * 0.33; // Conversion : 1 HP = 0.33 €
+  let currentHP = tokensHP * 0.33; // Conversion : 1 HP ≈ 0.33 $
   let currentHBD = parseFloat(document.getElementById("currentHBD").value) || 0;
   const weeklyDeposit = parseFloat(document.getElementById("weeklyDeposit").value) || 0;
   const hpPercent = parseFloat(document.getElementById("hpPercent").value) || 50;
@@ -18,8 +18,8 @@ document.getElementById("simulationForm").addEventListener("submit", function(ev
   const monthlyRateHBD = annualInterestHBD / 12 / 100;
   
   // Objectifs :
-  // 1. Capital total >= 1 000 000 €
-  // 2. Générer environ 40k€/an d'intérêts (~3333.33 €/mois)
+  // 1. Capital total >= 1 000 000 $
+  // 2. Générer environ 40k$/an d'intérêts (~3333.33 $/mois)
   let targetMillionMonth = null;
   let targetRetirementMonth = null;
   const retirementMonthlyTarget = 40000 / 12;
@@ -180,7 +180,7 @@ document.getElementById("simulationForm").addEventListener("submit", function(ev
       },
       yaxis: { 
         title: {
-          text: currentLang === 'fr' ? "Montant (€)" : "Amount (€)",
+          text: currentLang === 'fr' ? "Montant ($)" : "Amount ($)",
           font: {
             family: 'Helvetica Neue, Arial, sans-serif',
             size: 16,
