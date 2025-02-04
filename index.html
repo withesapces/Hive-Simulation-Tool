@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hive Simulation Tool</title>
+  <style>
+    /* Neo-Brutalist CSS */
+    :root {
+      --primary-color: #000000;
+      --background-color: #f4f4f4;
+      --accent-color: #ff5733;
+      --text-color: #000000;
+      --border-width: 3px;
+    }
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: white;
+      border: var(--border-width) solid var(--primary-color);
+      box-shadow: 10px 10px 0 var(--primary-color);
+      padding: 30px;
+    }
+    .nb-heading {
+      font-size: 2rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      border-bottom: var(--border-width) solid var(--primary-color);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .nb-card {
+      background-color: white;
+      border: var(--border-width) solid var(--primary-color);
+      box-shadow: 8px 8px 0 var(--primary-color);
+      padding: 25px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .nb-form {
+      display: grid;
+      gap: 15px;
+    }
+    .nb-label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+    .nb-input {
+      width: 100%;
+      padding: 10px;
+      border: var(--border-width) solid var(--primary-color);
+      background-color: white;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .nb-input:focus {
+      box-shadow: 4px 4px 0 var(--accent-color);
+    }
+    .nb-btn {
+      background-color: var(--primary-color);
+      color: white;
+      border: var(--border-width) solid var(--primary-color);
+      padding: 12px 25px;
+      font-size: 1rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 6px 6px 0 var(--accent-color);
+    }
+    .nb-btn:hover {
+      background-color: var(--accent-color);
+      box-shadow: 4px 4px 0 var(--primary-color);
+    }
+    .form-note {
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 5px;
+    }
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: var(--border-width) solid var(--primary-color);
+    }
+    th, td {
+      padding: 12px;
+      text-align: center;
+      background-color: white;
+    }
+    th {
+      background-color: var(--primary-color);
+      color: white;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+      .nb-heading {
+        font-size: 1.5rem;
+      }
+      .nb-input, .nb-btn {
+        width: 100%;
+      }
+    }
+    /* Form validation and error states */
+    .nb-input:invalid {
+      border-color: red;
+      box-shadow: 4px 4px 0 rgba(255, 0, 0, 0.5);
+    }
+    /* Placeholder styling */
+    ::placeholder {
+      color: #999;
+      opacity: 0.7;
+    }
+    /* Style pour le toggle de langue */
+    #lang-toggle {
+      margin-bottom: 20px;
+    }
+    #lang-toggle .nb-btn {
+      margin-right: 10px;
+    }
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+    .pagination .nb-btn {
+      margin: 0 5px;
+      padding: 8px 16px;
+    }
+    /* Style pour le conteneur du graphique */
+    #chartContainer {
+      border: 3px solid var(--primary-color);
+      box-shadow: 8px 8px 0 var(--accent-color);
+      background-color: white;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1 class="nb-heading" data-i18n="simulationTool">Hive Simulation Tool</h1>
+      <!-- Toggle de langue -->
+      <div id="lang-toggle">
+        <button class="nb-btn" data-lang="en">English</button>
+        <button class="nb-btn" data-lang="fr">Français</button>
+      </div>
+    </header>
+    
+    <!-- Carte de saisie des paramètres -->
+    <section class="nb-card">
+      <h2 class="nb-heading" data-i18n="simulationParameters">Simulation Parameters</h2>
+      <form id="simulationForm" class="nb-form">
+        <div class="form-group">
+          <label for="currentHP" class="nb-label" data-i18n="currentHPLabel">Current HP (tokens):</label>
+          <input type="number" id="currentHP" name="currentHP" class="nb-input" value="0" step="1" required>
+          <p class="form-note" data-i18n="conversionNote">Conversion: 1 HP = 0.33 €</p>
+        </div>
+        <div class="form-group">
+          <label for="currentHBD" class="nb-label" data-i18n="currentHBDLabel">Current HBD (€):</label>
+          <input type="number" id="currentHBD" name="currentHBD" class="nb-input" value="0" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label for="weeklyDeposit" class="nb-label" data-i18n="weeklyDepositLabel">Estimated weekly gains (€):</label>
+          <input type="number" id="weeklyDeposit" name="weeklyDeposit" class="nb-input" value="10" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label for="hpPercent" class="nb-label" data-i18n="hpPercentLabel">Percentage allocated to HP (%):</label>
+          <input type="number" id="hpPercent" name="hpPercent" class="nb-input" value="50" min="0" max="100" required>
+          <p class="form-note" data-i18n="hpPercentNote">(The remainder will be automatically allocated to HBD.)</p>
+        </div>
+        <div class="form-group">
+          <label for="annualInterestHP" class="nb-label" data-i18n="annualInterestHPLabel">Annual interest rate for HP (%):</label>
+          <input type="number" id="annualInterestHP" name="annualInterestHP" class="nb-input" value="3" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label for="annualInterestHBD" class="nb-label" data-i18n="annualInterestHBDLabel">Annual interest rate for HBD (%):</label>
+          <input type="number" id="annualInterestHBD" name="annualInterestHBD" class="nb-input" value="15" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label for="simulationYears" class="nb-label" data-i18n="simulationYearsLabel">Simulation duration (years):</label>
+          <input type="number" id="simulationYears" name="simulationYears" class="nb-input" value="42" min="1" required>
+        </div>
+        <button id="simulateButton" type="submit" class="nb-btn" data-i18n="simulateButton">Simulate</button>
+      </form>
+    </section>
+    
+    <!-- Carte d'affichage des résultats -->
+    <section id="results" class="nb-card">
+      <!-- Les résultats s'afficheront ici -->
+    </section>
+  </div>
+  
+  <script>
+    // Objet de traduction pour l'anglais et le français
+    const translations = {
+      en: {
+        simulationTool: "Hive Simulation Tool",
+        simulationParameters: "Simulation Parameters",
+        currentHPLabel: "Current HP (tokens):",
+        conversionNote: "Conversion: 1 HP = 0.33 €",
+        currentHBDLabel: "Current HBD (€):",
+        weeklyDepositLabel: "Estimated weekly gains (€):",
+        hpPercentLabel: "Percentage allocated to HP (%):",
+        hpPercentNote: "(The remainder will be automatically allocated to HBD.)",
+        annualInterestHPLabel: "Annual interest rate for HP (%):",
+        annualInterestHBDLabel: "Annual interest rate for HBD (%):",
+        simulationYearsLabel: "Simulation duration (years):",
+        simulateButton: "Simulate",
+        simulationResults: "Simulation Results",
+        finalCapital: "Final total capital:",
+        finalHP: "Final HP balance (€):",
+        finalHBD: "Final HBD balance:",
+        millionObjective: "Million objective reached in:",
+        retirementObjective: "Retirement objective (40k€/year) reached in:",
+        millionNotReached: "Million objective not reached",
+        retirementNotReached: "Retirement objective not reached",
+        annualSummary: "Detailed Annual Summary",
+        chartTitle: "Interest Growth",
+        tableYear: "Year",
+        tableAnnualDeposit: "Annual Deposits (€)",
+        tableHP: "HP (€)",
+        tableHPInterest: "HP Interest (€)",
+        tableHBD: "HBD (€)",
+        tableHBDInterest: "HBD Interest (€)",
+        tableTotal: "Total (€)"
+      },
+      fr: {
+        simulationTool: "Outil de Simulation Hive",
+        simulationParameters: "Paramètres de la simulation",
+        currentHPLabel: "Nombre actuel de HP (tokens) :",
+        conversionNote: "Conversion : 1 HP = 0,33 €",
+        currentHBDLabel: "Montant actuel en HBD (€) :",
+        weeklyDepositLabel: "Gains hebdomadaires estimés (€) :",
+        hpPercentLabel: "Répartition des gains vers HP (%) :",
+        hpPercentNote: "(Le reste sera automatiquement alloué aux HBD.)",
+        annualInterestHPLabel: "Taux d’intérêt annuel pour HP (%) :",
+        annualInterestHBDLabel: "Taux d’intérêt annuel pour HBD (%) :",
+        simulationYearsLabel: "Durée de la simulation (années) :",
+        simulateButton: "Simuler",
+        simulationResults: "Résultats de la simulation",
+        finalCapital: "Capital total final :",
+        finalHP: "Solde HP final (en €) :",
+        finalHBD: "Solde HBD final :",
+        millionObjective: "Objectif Million atteint en :",
+        retirementObjective: "Objectif Retraite (40k€/an) atteint en :",
+        millionNotReached: "Objectif Million non atteint",
+        retirementNotReached: "Objectif Retraite non atteint",
+        annualSummary: "Résumé annuel détaillé",
+        chartTitle: "Progression des intérêts",
+        tableYear: "Année",
+        tableAnnualDeposit: "Dépôts annuels (€)",
+        tableHP: "HP (€)",
+        tableHPInterest: "Intérêts HP (€)",
+        tableHBD: "HBD (€)",
+        tableHBDInterest: "Intérêts HBD (€)",
+        tableTotal: "Total (€)"
+      }
+    };
+
+    // Définir et mettre à jour la langue de l'interface
+    let currentLang = localStorage.getItem('preferredLanguage') || "en";
+    function updateLanguage(lang) {
+      // Met à jour l'attribut lang de la balise <html>
+      document.documentElement.lang = lang;
+      // Met à jour tous les éléments avec data-i18n
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key]) {
+          el.textContent = translations[lang][key];
+        }
+      });
+    }
+    updateLanguage(currentLang);
+
+    // Gestion du clic sur les boutons du toggle de langue
+    document.getElementById("lang-toggle").addEventListener("click", function(event) {
+      if (event.target.matches('[data-lang]')) {
+        currentLang = event.target.getAttribute('data-lang');
+        updateLanguage(currentLang);
+        localStorage.setItem('preferredLanguage', currentLang);
+      }
+    });
+
+    // Événement de soumission du formulaire de simulation
+    document.getElementById("simulationForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      
+      // Récupération des valeurs saisies
+      let tokensHP = parseFloat(document.getElementById("currentHP").value) || 0;
+      let currentHP = tokensHP * 0.33; // Conversion : 1 HP = 0.33 €
+      let currentHBD = parseFloat(document.getElementById("currentHBD").value) || 0;
+      const weeklyDeposit = parseFloat(document.getElementById("weeklyDeposit").value) || 0;
+      const hpPercent = parseFloat(document.getElementById("hpPercent").value) || 50;
+      const annualInterestHP = parseFloat(document.getElementById("annualInterestHP").value) || 3;
+      const annualInterestHBD = parseFloat(document.getElementById("annualInterestHBD").value) || 15;
+      const simulationYears = parseFloat(document.getElementById("simulationYears").value) || 42;
+      
+      // Calculs de base
+      const simulationMonths = simulationYears * 12;
+      const monthlyDeposit = weeklyDeposit * 4.345; // Conversion approximative des semaines en mois
+      const monthlyRateHP = annualInterestHP / 12 / 100;
+      const monthlyRateHBD = annualInterestHBD / 12 / 100;
+      
+      // Objectifs :
+      // 1. Capital total >= 1 000 000 €
+      // 2. Générer environ 40k€/an d'intérêts (~3333.33 €/mois)
+      let targetMillionMonth = null;
+      let targetRetirementMonth = null;
+      const retirementMonthlyTarget = 40000 / 12;
+      
+      // Stockage des instantanés annuels pour reporting
+      let snapshots = [];
+      
+      // Simulation mois par mois
+      for (let m = 1; m <= simulationMonths; m++) {
+        // Dépôt mensuel
+        currentHP += monthlyDeposit * (hpPercent / 100);
+        currentHBD += monthlyDeposit * ((100 - hpPercent) / 100);
+        
+        // Application des intérêts composés mensuels
+        currentHP *= (1 + monthlyRateHP);
+        currentHBD *= (1 + monthlyRateHBD);
+        
+        // Vérification des objectifs
+        if (!targetMillionMonth && (currentHP + currentHBD >= 1000000)) {
+          targetMillionMonth = m;
+        }
+        if (!targetRetirementMonth && ((currentHP * monthlyRateHP) + (currentHBD * monthlyRateHBD) >= retirementMonthlyTarget)) {
+          targetRetirementMonth = m;
+        }
+        
+        // Sauvegarde de l'instantané en fin d'année
+        if (m % 12 === 0) {
+          snapshots.push({
+            year: m / 12,
+            hp: currentHP,
+            hbd: currentHBD,
+            total: currentHP + currentHBD,
+            annualDeposit: monthlyDeposit * 12,
+            hpInterest: currentHP * (annualInterestHP / 100),
+            hbdInterest: currentHBD * (annualInterestHBD / 100)
+          });
+        }
+      }
+      
+      // Construction de l'affichage des résultats avec les traductions
+      let resultsHTML = `<h2 class='nb-heading'>${translations[currentLang].simulationResults}</h2>`;
+      resultsHTML += `<p><strong>${translations[currentLang].finalCapital}</strong> ${(currentHP + currentHBD).toLocaleString(currentLang, { style: 'currency', currency: 'EUR' })}</p>`;
+      resultsHTML += `<p><strong>${translations[currentLang].finalHP}</strong> ${currentHP.toLocaleString(currentLang, { style: 'currency', currency: 'EUR' })}</p>`;
+      resultsHTML += `<p><strong>${translations[currentLang].finalHBD}</strong> ${currentHBD.toLocaleString(currentLang, { style: 'currency', currency: 'EUR' })}</p>`;
+      
+      if (targetMillionMonth) {
+        const years = Math.floor(targetMillionMonth / 12);
+        const months = targetMillionMonth % 12;
+        resultsHTML += `<p><strong>${translations[currentLang].millionObjective}</strong> ${years} ${currentLang === 'fr' ? "an(s) et" : "year(s) and"} ${months} ${currentLang === 'fr' ? "mois." : "month(s)."}</p>`;
+      } else {
+        resultsHTML += `<p><strong>${translations[currentLang].millionNotReached}</strong> ${currentLang === 'fr' ? "dans la durée simulée." : "within the simulated period."}</p>`;
+      }
+      
+      if (targetRetirementMonth) {
+        const years = Math.floor(targetRetirementMonth / 12);
+        const months = targetRetirementMonth % 12;
+        resultsHTML += `<p><strong>${translations[currentLang].retirementObjective}</strong> ${years} ${currentLang === 'fr' ? "an(s) et" : "year(s) and"} ${months} ${currentLang === 'fr' ? "mois." : "month(s)."}</p>`;
+      } else {
+        resultsHTML += `<p><strong>${translations[currentLang].retirementNotReached}</strong> ${currentLang === 'fr' ? "dans la durée simulée." : "within the simulated period."}</p>`;
+      }
+      
+      // Tableau récapitulatif avec pagination
+      resultsHTML += `<h3 class='nb-heading'>${translations[currentLang].annualSummary}</h3>`;
+      resultsHTML += `
+        <div id="tableContainer">
+          <table id="annualSummaryTable">
+            <thead>
+              <tr>
+                <th>${translations[currentLang].tableYear}</th>
+                <th>${translations[currentLang].tableAnnualDeposit}</th>
+                <th>${translations[currentLang].tableHP}</th>
+                <th>${translations[currentLang].tableHPInterest}</th>
+                <th>${translations[currentLang].tableHBD}</th>
+                <th>${translations[currentLang].tableHBDInterest}</th>
+                <th>${translations[currentLang].tableTotal}</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${snapshots.map(snapshot => `
+                <tr>
+                  <td>${snapshot.year}</td>
+                  <td>${snapshot.annualDeposit.toLocaleString(currentLang, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                  <td>${snapshot.hp.toLocaleString(currentLang, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                  <td>${snapshot.hpInterest.toLocaleString(currentLang, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                  <td>${snapshot.hbd.toLocaleString(currentLang, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                  <td>${snapshot.hbdInterest.toLocaleString(currentLang, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                  <td>${snapshot.total.toLocaleString(currentLang, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+          <div id="pagination" class="pagination">
+            <!-- Les boutons de pagination seront ajoutés dynamiquement -->
+          </div>
+        </div>
+      `;
+      
+      // Graphique avec Plotly
+      resultsHTML += `
+        <h3 class='nb-heading'>${translations[currentLang].chartTitle}</h3>
+        <div id="chartContainer" style="width: 100%; height: 400px;"></div>
+      `;
+      
+      document.getElementById("results").innerHTML = resultsHTML;
+      
+      // Chargement et configuration du graphique Plotly
+      const script = document.createElement('script');
+      script.src = 'https://cdn.plot.ly/plotly-latest.min.js';
+      script.onload = function() {
+        const chartData = [
+          {
+            x: snapshots.map(s => s.year),
+            y: snapshots.map(s => s.hpInterest + s.hbdInterest),
+            type: 'scatter',
+            mode: 'lines+markers',
+            name: 'Interest',
+            line: {
+              color: 'var(--primary-color)',
+              width: 4,
+            },
+            marker: {
+              color: 'var(--accent-color)',
+              size: 10,
+              line: {
+                color: 'var(--primary-color)',
+                width: 3
+              }
+            }
+          }
+        ];
+        
+        const layout = {
+          title: {
+            text: translations[currentLang].chartTitle,
+            font: {
+              family: 'Helvetica Neue, Arial, sans-serif',
+              size: 24,
+              color: 'var(--primary-color)',
+              weight: '900'
+            }
+          },
+          paper_bgcolor: 'var(--background-color)',
+          plot_bgcolor: 'white',
+          xaxis: { 
+            title: {
+              text: currentLang === 'fr' ? "Année" : "Year",
+              font: {
+                family: 'Helvetica Neue, Arial, sans-serif',
+                size: 16,
+                color: 'var(--primary-color)'
+              }
+            },
+            gridcolor: 'var(--primary-color)',
+            zerolinecolor: 'var(--primary-color)',
+            tickfont: {
+              color: 'var(--primary-color)'
+            }
+          },
+          yaxis: { 
+            title: {
+              text: currentLang === 'fr' ? "Montant (€)" : "Amount (€)",
+              font: {
+                family: 'Helvetica Neue, Arial, sans-serif',
+                size: 16,
+                color: 'var(--primary-color)'
+              }
+            },
+            gridcolor: 'var(--primary-color)',
+            zerolinecolor: 'var(--primary-color)',
+            tickfont: {
+              color: 'var(--primary-color)'
+            }
+          },
+          margin: {
+            l: 60,
+            r: 30,
+            t: 80,
+            b: 60
+          },
+          shapes: [
+            {
+              type: 'rect',
+              xref: 'paper',
+              yref: 'paper',
+              x0: 0,
+              y0: 0,
+              x1: 1,
+              y1: 1,
+              line: {
+                color: 'var(--primary-color)',
+                width: 3
+              }
+            }
+          ]
+        };
+        
+        const config = {
+          responsive: true,
+          displayModeBar: false
+        };
+        
+        Plotly.newPlot('chartContainer', chartData, layout, config);
+      };
+      document.head.appendChild(script);
+      
+      // Pagination pour le tableau
+      function setupPagination() {
+        const table = document.getElementById('annualSummaryTable');
+        const rows = table.querySelectorAll('tbody tr');
+        const pagination = document.getElementById('pagination');
+        const itemsPerPage = 10;
+        const totalPages = Math.ceil(rows.length / itemsPerPage);
+        
+        function showPage(page) {
+          const start = (page - 1) * itemsPerPage;
+          const end = start + itemsPerPage;
+          rows.forEach((row, index) => {
+            row.style.display = (index >= start && index < end) ? '' : 'none';
+          });
+          updatePaginationButtons(page);
+        }
+        
+        function updatePaginationButtons(currentPage) {
+          pagination.innerHTML = '';
+          if (currentPage > 1) {
+            const prevButton = document.createElement('button');
+            prevButton.textContent = currentLang === 'fr' ? "Précédent" : "Previous";
+            prevButton.classList.add('nb-btn');
+            prevButton.onclick = () => showPage(currentPage - 1);
+            pagination.appendChild(prevButton);
+          }
+          for (let i = 1; i <= totalPages; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.textContent = i;
+            pageButton.classList.add('nb-btn');
+            pageButton.style.margin = '0 5px';
+            pageButton.style.backgroundColor = i === currentPage ? 'var(--accent-color)' : 'var(--primary-color)';
+            pageButton.onclick = () => showPage(i);
+            pagination.appendChild(pageButton);
+          }
+          if (currentPage < totalPages) {
+            const nextButton = document.createElement('button');
+            nextButton.textContent = currentLang === 'fr' ? "Suivant" : "Next";
+            nextButton.classList.add('nb-btn');
+            nextButton.onclick = () => showPage(currentPage + 1);
+            pagination.appendChild(nextButton);
+          }
+        }
+        
+        showPage(1);
+      }
+      setTimeout(setupPagination, 100);
+    });
+  </script>
+</body>
+</html>
