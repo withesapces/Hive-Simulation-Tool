@@ -74,9 +74,9 @@ document.getElementById("simulationForm").addEventListener("submit", function(ev
   
   // Construction de l'affichage des résultats avec les traductions
   let resultsHTML = `<h2 class='nb-heading'>${translations[currentLang].simulationResults}</h2>`;
-  resultsHTML += `<p><strong>${translations[currentLang].finalCapital}</strong> ${( (tokensHP * hpTokenPrice) + currentHBD ).toLocaleString(currentLang, { style: 'currency', currency: 'EUR' })}</p>`;
-  resultsHTML += `<p><strong>${translations[currentLang].finalHP}</strong> ${(tokensHP * hpTokenPrice).toLocaleString(currentLang, { style: 'currency', currency: 'EUR' })}</p>`;
-  resultsHTML += `<p><strong>${translations[currentLang].finalHBD}</strong> ${currentHBD.toLocaleString(currentLang, { style: 'currency', currency: 'EUR' })}</p>`;
+  resultsHTML += `<p><strong>${translations[currentLang].finalCapital}</strong> ${( (tokensHP * hpTokenPrice) + currentHBD ).toLocaleString(currentLang, { style: 'currency', currency: 'USD' })}</p>`;
+  resultsHTML += `<p><strong>${translations[currentLang].finalHP}</strong> ${(tokensHP * hpTokenPrice).toLocaleString(currentLang, { style: 'currency', currency: 'USD' })}</p>`;
+  resultsHTML += `<p><strong>${translations[currentLang].finalHBD}</strong> ${currentHBD.toLocaleString(currentLang, { style: 'currency', currency: 'USD' })}</p>`;
   
   if (targetMillionMonth) {
     const years = Math.floor(targetMillionMonth / 12);
