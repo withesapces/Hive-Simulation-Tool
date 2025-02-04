@@ -2,14 +2,17 @@ document.getElementById("simulationForm").addEventListener("submit", function(ev
   event.preventDefault();
   
   // Récupération des valeurs saisies
+  // Pour le HP, on récupère directement le nombre de tokens
   let tokensHP = parseFloat(document.getElementById("currentHP").value) || 0;
-  let currentHP = tokensHP * 0.33; // Conversion : 1 HP ≈ 0.33 $
   let currentHBD = parseFloat(document.getElementById("currentHBD").value) || 0;
   const weeklyDeposit = parseFloat(document.getElementById("weeklyDeposit").value) || 0;
   const hpPercent = parseFloat(document.getElementById("hpPercent").value) || 50;
   const annualInterestHP = parseFloat(document.getElementById("annualInterestHP").value) || 3;
   const annualInterestHBD = parseFloat(document.getElementById("annualInterestHBD").value) || 15;
   const simulationYears = parseFloat(document.getElementById("simulationYears").value) || 42;
+  
+  // Définition du taux de conversion HP ($ -> tokens)
+  const hpTokenPrice = 0.33;
   
   // Calculs de base
   const simulationMonths = simulationYears * 12;
@@ -30,18 +33,28 @@ document.getElementById("simulationForm").addEventListener("submit", function(ev
   // Simulation mois par mois
   for (let m = 1; m <= simulationMonths; m++) {
     // Dépôt mensuel
-    currentHP += monthlyDeposit * (hpPercent / 100);
+    // Pour le HP, on convertit la part en dollars en tokens :
+    let depositHP_Dollars = monthlyDeposit * (hpPercent / 100);
+    let depositHP_Tokens = depositHP_Dollars / hpTokenPrice;
+    tokensHP += depositHP_Tokens;
+    
+    // Pour le HBD, la somme est directement en dollars
     currentHBD += monthlyDeposit * ((100 - hpPercent) / 100);
     
     // Application des intérêts composés mensuels
-    currentHP *= (1 + monthlyRateHP);
+    // Pour le HP, on applique l'intérêt sur le nombre de tokens (la valeur en dollars sera tokensHP * hpTokenPrice)
+    tokensHP *= (1 + monthlyRateHP);
+    // Pour le HBD, on applique directement l'intérêt sur le montant en dollars
     currentHBD *= (1 + monthlyRateHBD);
     
+    // Calcul de la valeur actuelle du HP en dollars
+    let currentHP_Value = tokensHP * hpTokenPrice;
+    
     // Vérification des objectifs
-    if (!targetMillionMonth && (currentHP + currentHBD >= 1000000)) {
+    if (!targetMillionMonth && (currentHP_Value + currentHBD >= 1000000)) {
       targetMillionMonth = m;
     }
-    if (!targetRetirementMonth && ((currentHP * monthlyRateHP) + (currentHBD * monthlyRateHBD) >= retirementMonthlyTarget)) {
+    if (!targetRetirementMonth && ((currentHP_Value * monthlyRateHP) + (currentHBD * monthlyRateHBD) >= retirementMonthlyTarget)) {
       targetRetirementMonth = m;
     }
     
@@ -49,11 +62,11 @@ document.getElementById("simulationForm").addEventListener("submit", function(ev
     if (m % 12 === 0) {
       snapshots.push({
         year: m / 12,
-        hp: currentHP,
+        hp: currentHP_Value,
         hbd: currentHBD,
-        total: currentHP + currentHBD,
+        total: currentHP_Value + currentHBD,
         annualDeposit: monthlyDeposit * 12,
-        hpInterest: currentHP * (annualInterestHP / 100),
+        hpInterest: currentHP_Value * (annualInterestHP / 100),
         hbdInterest: currentHBD * (annualInterestHBD / 100)
       });
     }
@@ -61,8 +74,8 @@ document.getElementById("simulationForm").addEventListener("submit", function(ev
   
   // Construction de l'affichage des résultats avec les traductions
   let resultsHTML = `<h2 class='nb-heading'>${translations[currentLang].simulationResults}</h2>`;
-  resultsHTML += `<p><strong>${translations[currentLang].finalCapital}</strong> ${(currentHP + currentHBD).toLocaleString(currentLang, { style: 'currency', currency: 'EUR' })}</p>`;
-  resultsHTML += `<p><strong>${translations[currentLang].finalHP}</strong> ${currentHP.toLocaleString(currentLang, { style: 'currency', currency: 'EUR' })}</p>`;
+  resultsHTML += `<p><strong>${translations[currentLang].finalCapital}</strong> ${( (tokensHP * hpTokenPrice) + currentHBD ).toLocaleString(currentLang, { style: 'currency', currency: 'EUR' })}</p>`;
+  resultsHTML += `<p><strong>${translations[currentLang].finalHP}</strong> ${(tokensHP * hpTokenPrice).toLocaleString(currentLang, { style: 'currency', currency: 'EUR' })}</p>`;
   resultsHTML += `<p><strong>${translations[currentLang].finalHBD}</strong> ${currentHBD.toLocaleString(currentLang, { style: 'currency', currency: 'EUR' })}</p>`;
   
   if (targetMillionMonth) {
