@@ -1,0 +1,181 @@
+/* Neo-Brutalist CSS */
+:root {
+    --primary-color: #000000;
+    --background-color: #f4f4f4;
+    --accent-color: #ff5733;
+    --text-color: #000000;
+    --border-width: 3px;
+}
+
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+    border: var(--border-width) solid var(--primary-color);
+    box-shadow: 10px 10px 0 var(--primary-color);
+    padding: 30px;
+}
+
+.nb-heading {
+    font-size: 2rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    border-bottom: var(--border-width) solid var(--primary-color);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.nb-card {
+    background-color: white;
+    border: var(--border-width) solid var(--primary-color);
+    box-shadow: 8px 8px 0 var(--primary-color);
+    padding: 25px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.nb-form {
+    display: grid;
+    gap: 15px;
+}
+
+.nb-label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.nb-input {
+    width: 100%;
+    padding: 10px;
+    border: var(--border-width) solid var(--primary-color);
+    background-color: white;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.nb-input:focus {
+    box-shadow: 4px 4px 0 var(--accent-color);
+}
+
+.nb-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: var(--border-width) solid var(--primary-color);
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 6px 6px 0 var(--accent-color);
+}
+
+.nb-btn:hover {
+    background-color: var(--accent-color);
+    box-shadow: 4px 4px 0 var(--primary-color);
+}
+
+.form-note {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 5px;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+}
+
+table,
+th,
+td {
+    border: var(--border-width) solid var(--primary-color);
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: center;
+    background-color: white;
+}
+
+th {
+    background-color: var(--primary-color);
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    .nb-heading {
+        font-size: 1.5rem;
+    }
+
+    .nb-input,
+    .nb-btn {
+        width: 100%;
+    }
+}
+
+/* Form validation and error states */
+.nb-input:invalid {
+    border-color: red;
+    box-shadow: 4px 4px 0 rgba(255, 0, 0, 0.5);
+}
+
+/* Placeholder styling */
+::placeholder {
+    color: #999;
+    opacity: 0.7;
+}
+
+/* Style pour le toggle de langue */
+#lang-toggle {
+    margin-bottom: 20px;
+}
+
+#lang-toggle .nb-btn {
+    margin-right: 10px;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.pagination .nb-btn {
+    margin: 0 5px;
+    padding: 8px 16px;
+}
+
+/* Style pour le conteneur du graphique */
+#chartContainer {
+    border: 3px solid var(--primary-color);
+    box-shadow: 8px 8px 0 var(--accent-color);
+    background-color: white;
+    margin-bottom: 20px;
+}
