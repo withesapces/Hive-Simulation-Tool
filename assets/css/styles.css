@@ -26,6 +26,15 @@ body {
     padding: 30px;
 }
 
+.nb-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: var(--border-width) solid var(--primary-color);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
 .nb-heading {
     font-size: 2rem;
     font-weight: 900;
@@ -152,7 +161,8 @@ th {
 
 /* Style pour le toggle de langue */
 #lang-toggle {
-    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
 }
 
 #lang-toggle .nb-btn {
