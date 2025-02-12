@@ -1,11 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Hive Simulation Tool</title>
   <link rel="stylesheet" href="assets/css/styles.css">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8PWNV0KJ61"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-8PWNV0KJ61');
+  </script>
 </head>
+
 <body>
   <div class="container">
     <header class="nb-header">
@@ -14,8 +25,8 @@
         <button class="nb-btn" data-lang="en">English</button>
         <button class="nb-btn" data-lang="fr">Français</button>
       </div>
-    </header>    
-    
+    </header>
+
     <section class="nb-card">
       <h2 class="nb-heading" data-i18n="simulationParameters">Simulation Parameters</h2>
       <form id="simulationForm" class="nb-form">
@@ -25,7 +36,8 @@
           <div class="form-group">
             <label for="hiveUsername" class="nb-label">Hive Username:</label>
             <div class="input-group">
-              <input type="text" id="hiveUsername" name="hiveUsername" class="nb-input" placeholder="Enter your Hive username">
+              <input type="text" id="hiveUsername" name="hiveUsername" class="nb-input"
+                placeholder="Enter your Hive username">
               <button id="fetchHiveData" type="button" class="nb-btn">Fetch Data</button>
             </div>
           </div>
@@ -49,8 +61,10 @@
         <div class="parameter-section">
           <h3 data-i18n="investmentStrategy">3. Investment Strategy</h3>
           <div class="form-group">
-            <label for="weeklyDeposit" class="nb-label" data-i18n="weeklyDepositLabel">Estimated weekly gains ($):</label>
-            <input type="number" id="weeklyDeposit" name="weeklyDeposit" class="nb-input" value="10" step="0.01" required>
+            <label for="weeklyDeposit" class="nb-label" data-i18n="weeklyDepositLabel">Estimated weekly gains
+              ($):</label>
+            <input type="number" id="weeklyDeposit" name="weeklyDeposit" class="nb-input" value="10" step="0.01"
+              required>
           </div>
           <div class="form-group">
             <label for="hpPercent" class="nb-label" data-i18n="hpPercentLabel">Percentage allocated to HP (%):</label>
@@ -63,12 +77,16 @@
         <div class="parameter-section">
           <h3 data-i18n="yieldParameters">4. Yield Parameters</h3>
           <div class="form-group">
-            <label for="annualInterestHP" class="nb-label" data-i18n="annualInterestHPLabel">Annual interest rate for HP (%):</label>
-            <input type="number" id="annualInterestHP" name="annualInterestHP" class="nb-input" value="3" step="0.01" required>
+            <label for="annualInterestHP" class="nb-label" data-i18n="annualInterestHPLabel">Annual interest rate for HP
+              (%):</label>
+            <input type="number" id="annualInterestHP" name="annualInterestHP" class="nb-input" value="3" step="0.01"
+              required>
           </div>
           <div class="form-group">
-            <label for="annualInterestHBD" class="nb-label" data-i18n="annualInterestHBDLabel">Annual interest rate for HBD (%):</label>
-            <input type="number" id="annualInterestHBD" name="annualInterestHBD" class="nb-input" value="15" step="0.01" required>
+            <label for="annualInterestHBD" class="nb-label" data-i18n="annualInterestHBDLabel">Annual interest rate for
+              HBD (%):</label>
+            <input type="number" id="annualInterestHBD" name="annualInterestHBD" class="nb-input" value="15" step="0.01"
+              required>
           </div>
         </div>
 
@@ -76,15 +94,17 @@
         <div class="parameter-section">
           <h3 data-i18n="simulationDuration">5. Simulation Duration</h3>
           <div class="form-group">
-            <label for="simulationYears" class="nb-label" data-i18n="simulationYearsLabel">Simulation duration (years):</label>
-            <input type="number" id="simulationYears" name="simulationYears" class="nb-input" value="42" min="1" required>
+            <label for="simulationYears" class="nb-label" data-i18n="simulationYearsLabel">Simulation duration
+              (years):</label>
+            <input type="number" id="simulationYears" name="simulationYears" class="nb-input" value="42" min="1"
+              required>
           </div>
         </div>
 
         <button id="simulateButton" type="submit" class="nb-btn" data-i18n="simulateButton">Simulate</button>
       </form>
     </section>
-    
+
     <section id="results" class="nb-card">
       <!-- Les résultats s'afficheront ici -->
     </section>
@@ -93,4 +113,5 @@
   <script src="assets/js/translations.js"></script>
   <script src="assets/js/language.js"></script>
 </body>
+
 </html>
