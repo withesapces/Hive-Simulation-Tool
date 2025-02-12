@@ -10,52 +10,81 @@
   <div class="container">
     <header class="nb-header">
       <h1 class="nb-heading" data-i18n="simulationTool">Hive Simulation Tool</h1>
-      <!-- Toggle de langue -->
       <div id="lang-toggle">
         <button class="nb-btn" data-lang="en">English</button>
         <button class="nb-btn" data-lang="fr">Français</button>
       </div>
     </header>    
     
-    <!-- Carte de saisie des paramètres -->
     <section class="nb-card">
       <h2 class="nb-heading" data-i18n="simulationParameters">Simulation Parameters</h2>
       <form id="simulationForm" class="nb-form">
-        <div class="form-group">
-          <label for="currentHP" class="nb-label" data-i18n="currentHPLabel">Current HP (tokens):</label>
-          <input type="number" id="currentHP" name="currentHP" class="nb-input" value="0" step="1" required>
-          <p class="form-note" data-i18n="conversionNote">Conversion: 1 HP ≈ 0.33 $</p>
+        <!-- Section 1: Compte Hive -->
+        <div class="parameter-section">
+          <h3 data-i18n="hiveAccount">1. Hive Account</h3>
+          <div class="form-group">
+            <label for="hiveUsername" class="nb-label">Hive Username:</label>
+            <div class="input-group">
+              <input type="text" id="hiveUsername" name="hiveUsername" class="nb-input" placeholder="Enter your Hive username">
+              <button id="fetchHiveData" type="button" class="nb-btn">Fetch Data</button>
+            </div>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="currentHBD" class="nb-label" data-i18n="currentHBDLabel">Current HBD ($):</label>
-          <input type="number" id="currentHBD" name="currentHBD" class="nb-input" value="0" step="0.01" required>
+
+        <!-- Section 2: Situation Actuelle -->
+        <div class="parameter-section">
+          <h3 data-i18n="currentSituation">2. Current Situation</h3>
+          <div class="form-group">
+            <label for="currentHP" class="nb-label" data-i18n="currentHPLabel">Current HP (tokens):</label>
+            <input type="number" id="currentHP" name="currentHP" class="nb-input" value="0" step="0.01" required>
+            <p class="form-note" data-i18n="conversionNote">Conversion: 1 HP ≈ 0.33 $</p>
+          </div>
+          <div class="form-group">
+            <label for="currentHBD" class="nb-label" data-i18n="currentHBDLabel">Current HBD in savings ($):</label>
+            <input type="number" id="currentHBD" name="currentHBD" class="nb-input" value="0" step="0.01" required>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="weeklyDeposit" class="nb-label" data-i18n="weeklyDepositLabel">Estimated weekly gains ($):</label>
-          <input type="number" id="weeklyDeposit" name="weeklyDeposit" class="nb-input" value="10" step="0.01" required>
+
+        <!-- Section 3: Stratégie d'Investissement -->
+        <div class="parameter-section">
+          <h3 data-i18n="investmentStrategy">3. Investment Strategy</h3>
+          <div class="form-group">
+            <label for="weeklyDeposit" class="nb-label" data-i18n="weeklyDepositLabel">Estimated weekly gains ($):</label>
+            <input type="number" id="weeklyDeposit" name="weeklyDeposit" class="nb-input" value="10" step="0.01" required>
+          </div>
+          <div class="form-group">
+            <label for="hpPercent" class="nb-label" data-i18n="hpPercentLabel">Percentage allocated to HP (%):</label>
+            <input type="number" id="hpPercent" name="hpPercent" class="nb-input" value="50" min="0" max="100" required>
+            <p class="form-note" data-i18n="hpPercentNote">(The remainder will be automatically allocated to HBD.)</p>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="hpPercent" class="nb-label" data-i18n="hpPercentLabel">Percentage allocated to HP (%):</label>
-          <input type="number" id="hpPercent" name="hpPercent" class="nb-input" value="50" min="0" max="100" required>
-          <p class="form-note" data-i18n="hpPercentNote">(The remainder will be automatically allocated to HBD.)</p>
+
+        <!-- Section 4: Paramètres de Rendement -->
+        <div class="parameter-section">
+          <h3 data-i18n="yieldParameters">4. Yield Parameters</h3>
+          <div class="form-group">
+            <label for="annualInterestHP" class="nb-label" data-i18n="annualInterestHPLabel">Annual interest rate for HP (%):</label>
+            <input type="number" id="annualInterestHP" name="annualInterestHP" class="nb-input" value="3" step="0.01" required>
+          </div>
+          <div class="form-group">
+            <label for="annualInterestHBD" class="nb-label" data-i18n="annualInterestHBDLabel">Annual interest rate for HBD (%):</label>
+            <input type="number" id="annualInterestHBD" name="annualInterestHBD" class="nb-input" value="15" step="0.01" required>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="annualInterestHP" class="nb-label" data-i18n="annualInterestHPLabel">Annual interest rate for HP (%):</label>
-          <input type="number" id="annualInterestHP" name="annualInterestHP" class="nb-input" value="3" step="0.01" required>
+
+        <!-- Section 5: Durée de Simulation -->
+        <div class="parameter-section">
+          <h3 data-i18n="simulationDuration">5. Simulation Duration</h3>
+          <div class="form-group">
+            <label for="simulationYears" class="nb-label" data-i18n="simulationYearsLabel">Simulation duration (years):</label>
+            <input type="number" id="simulationYears" name="simulationYears" class="nb-input" value="42" min="1" required>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="annualInterestHBD" class="nb-label" data-i18n="annualInterestHBDLabel">Annual interest rate for HBD (%):</label>
-          <input type="number" id="annualInterestHBD" name="annualInterestHBD" class="nb-input" value="15" step="0.01" required>
-        </div>
-        <div class="form-group">
-          <label for="simulationYears" class="nb-label" data-i18n="simulationYearsLabel">Simulation duration (years):</label>
-          <input type="number" id="simulationYears" name="simulationYears" class="nb-input" value="42" min="1" required>
-        </div>
+
         <button id="simulateButton" type="submit" class="nb-btn" data-i18n="simulateButton">Simulate</button>
       </form>
     </section>
     
-    <!-- Carte d'affichage des résultats -->
     <section id="results" class="nb-card">
       <!-- Les résultats s'afficheront ici -->
     </section>

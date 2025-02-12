@@ -102,7 +102,6 @@ document.getElementById("simulationForm").addEventListener("submit", function(ev
         <thead>
           <tr>
             <th>${translations[currentLang].tableYear}</th>
-            <th>${translations[currentLang].tableAnnualDeposit}</th>
             <th>${translations[currentLang].tableHP}</th>
             <th>${translations[currentLang].tableHPInterest}</th>
             <th>${translations[currentLang].tableHBD}</th>
@@ -114,7 +113,6 @@ document.getElementById("simulationForm").addEventListener("submit", function(ev
           ${snapshots.map(snapshot => `
             <tr>
               <td>${snapshot.year}</td>
-              <td>${snapshot.annualDeposit.toLocaleString(currentLang, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
               <td>${snapshot.hp.toLocaleString(currentLang, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
               <td>${snapshot.hpInterest.toLocaleString(currentLang, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
               <td>${snapshot.hbd.toLocaleString(currentLang, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
@@ -286,3 +284,81 @@ document.getElementById("simulationForm").addEventListener("submit", function(ev
   }
   setTimeout(setupPagination, 100);
 });
+
+async function fetchHiveData() {
+  const username = document.getElementById("hiveUsername").value.trim();
+  if (!username) {
+      alert("Please enter a Hive username.");
+      return;
+  }
+
+  try {
+      // 1️⃣ Récupérer les infos de l'utilisateur
+      const userResponse = await fetch("https://api.hive.blog", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+              jsonrpc: "2.0",
+              method: "condenser_api.get_accounts",
+              params: [[username]],
+              id: 1
+          })
+      });
+
+      const userData = await userResponse.json();
+      if (!userData.result || userData.result.length === 0) {
+          alert("User not found.");
+          return;
+      }
+
+      const user = userData.result[0];
+
+      console.log(user);
+
+      // 2️⃣ Récupérer les paramètres globaux pour la conversion VESTS → HP
+      const globalResponse = await fetch("https://api.hive.blog", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+              jsonrpc: "2.0",
+              method: "condenser_api.get_dynamic_global_properties",
+              params: [],
+              id: 1
+          })
+      });
+
+      const globalData = await globalResponse.json();
+      if (!globalData.result) {
+          alert("Failed to fetch global properties.");
+          return;
+      }
+
+      const totalVestingFundHive = parseFloat(globalData.result.total_vesting_fund_hive.replace(" HIVE", ""));
+      const totalVestingShares = parseFloat(globalData.result.total_vesting_shares.replace(" VESTS", ""));
+
+      // 3️⃣ Calculer le taux de conversion actuel
+      const vestingToHP = totalVestingFundHive / totalVestingShares;
+
+      // 4️⃣ Extraire les valeurs nécessaires
+      const vestingShares = parseFloat(user.vesting_shares.replace(" VESTS", "")) || 0;
+      const delegatedVests = parseFloat(user.delegated_vesting_shares.replace(" VESTS", "")) || 0;
+
+      // 5️⃣ Conversion exacte
+      const hivePower = (vestingShares - delegatedVests) * vestingToHP;
+
+      // 6️⃣ Balances en HIVE et HBD
+      const hiveLiquid = parseFloat(user.balance.replace(" HIVE", "")) || 0;
+      const hiveSavings = parseFloat(user.savings_balance.replace(" HIVE", "")) || 0;
+      // const hbdBalance = parseFloat(user.hbd_balance.replace(" HBD", "")) || 0;
+      const hbdSavings = parseFloat(user.savings_hbd_balance.replace(" HBD", "")) || 0;
+
+      // 7️⃣ Mise à jour des champs
+      document.getElementById("currentHP").value = hivePower.toFixed(2);
+      document.getElementById("currentHBD").value = (hbdSavings).toFixed(2);
+  } catch (error) {
+      console.error("Error fetching Hive data:", error);
+      alert("Failed to fetch Hive data.");
+  }
+}
+
+document.getElementById("fetchHiveData").addEventListener("click", fetchHiveData);

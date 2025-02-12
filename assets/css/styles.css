@@ -7,6 +7,11 @@
     --border-width: 3px;
 }
 
+*, *::before, *::after {
+    box-sizing: border-box;
+  }
+  
+
 body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     background-color: var(--background-color);
@@ -54,8 +59,9 @@ body {
 }
 
 .nb-form {
-    display: grid;
-    gap: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
 }
 
 .nb-label {
@@ -67,6 +73,7 @@ body {
 }
 
 .nb-input {
+    box-sizing: border-box;
     width: 100%;
     padding: 10px;
     border: var(--border-width) solid var(--primary-color);
@@ -74,7 +81,8 @@ body {
     font-size: 1rem;
     outline: none;
     transition: all 0.2s;
-}
+  }
+  
 
 .nb-input:focus {
     box-shadow: 4px 4px 0 var(--accent-color);
@@ -182,6 +190,17 @@ th {
     padding: 8px 16px;
 }
 
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .input-group .nb-input {
+    flex: 1;
+  }
+  
+
 /* Style pour le conteneur du graphique */
 #chartContainer {
     border: 3px solid var(--primary-color);
@@ -189,3 +208,25 @@ th {
     background-color: white;
     margin-bottom: 20px;
 }
+
+.parameter-section {
+    border: 2px solid var(--primary-color);
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #fafafa;
+}
+
+.parameter-section h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: -20px -20px 20px -20px;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    text-transform: uppercase;
+}
+
+.parameter-section:last-of-type {
+    margin-bottom: 30px;
+}
+

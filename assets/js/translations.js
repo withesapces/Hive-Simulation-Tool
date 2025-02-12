@@ -4,7 +4,7 @@ const translations = {
       simulationParameters: "Simulation Parameters",
       currentHPLabel: "Current HP (tokens):",
       conversionNote: "Conversion: 1 HP ≈ 0.33 $",
-      currentHBDLabel: "Current HBD ($):",
+      currentHBDLabel: "Current HBD in savings ($):",
       weeklyDepositLabel: "Estimated weekly gains ($):",
       hpPercentLabel: "Percentage allocated to HP (%):",
       hpPercentNote: "(The remainder will be automatically allocated to HBD.)",
@@ -28,14 +28,19 @@ const translations = {
       tableHPInterest: "HP Interest ($)",
       tableHBD: "HBD ($)",
       tableHBDInterest: "HBD Interest ($)",
-      tableTotal: "Total ($)"
+      tableTotal: "Total ($)",
+      hiveAccount: "1. Hive Account",
+      currentSituation: "2. Current Situation",
+      investmentStrategy: "3. Investment Strategy",
+      yieldParameters: "4. Yield Parameters",
+      simulationDuration: "5. Simulation Duration",
     },
     fr: {
       simulationTool: "Outil de Simulation Hive",
       simulationParameters: "Paramètres de la simulation",
       currentHPLabel: "Nombre actuel de HP (tokens) :",
       conversionNote: "Conversion : 1 HP = 0,33 $",
-      currentHBDLabel: "Montant actuel en HBD ($) :",
+      currentHBDLabel: "Montant actuel en HBD dans les savings ($) :",
       weeklyDepositLabel: "Gains hebdomadaires estimés ($) :",
       hpPercentLabel: "Répartition des gains vers HP (%) :",
       hpPercentNote: "(Le reste sera automatiquement alloué aux HBD.)",
@@ -59,7 +64,12 @@ const translations = {
       tableHPInterest: "Intérêts HP ($)",
       tableHBD: "HBD ($)",
       tableHBDInterest: "Intérêts HBD ($)",
-      tableTotal: "Total ($)"
+      tableTotal: "Total ($)",
+      hiveAccount: "1. Compte Hive",
+      currentSituation: "2. Situation Actuelle",
+      investmentStrategy: "3. Stratégie d'Investissement",
+      yieldParameters: "4. Paramètres de Rendement",
+      simulationDuration: "5. Durée de Simulation",
     }
   };
   
