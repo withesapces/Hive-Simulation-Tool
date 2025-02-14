@@ -73,7 +73,7 @@ document.getElementById("simulationForm").addEventListener("submit", function(ev
   }
   
   // Construction de l'affichage des résultats avec les traductions
-  let resultsHTML = `<h2 class='nb-heading'>${translations[currentLang].simulationResults}</h2>`;
+  let resultsHTML = `<h2 class='nb-heading nb-header'>${translations[currentLang].simulationResults}</h2>`;
   resultsHTML += `<p><strong>${translations[currentLang].finalCapital}</strong> ${( (tokensHP * hpTokenPrice) + currentHBD ).toLocaleString(currentLang, { style: 'currency', currency: 'USD' })}</p>`;
   resultsHTML += `<p><strong>${translations[currentLang].finalHP}</strong> ${(tokensHP * hpTokenPrice).toLocaleString(currentLang, { style: 'currency', currency: 'USD' })}</p>`;
   resultsHTML += `<p><strong>${translations[currentLang].finalHBD}</strong> ${currentHBD.toLocaleString(currentLang, { style: 'currency', currency: 'USD' })}</p>`;
@@ -89,26 +89,28 @@ document.getElementById("simulationForm").addEventListener("submit", function(ev
   if (targetRetirementMonth) {
     const years = Math.floor(targetRetirementMonth / 12);
     const months = targetRetirementMonth % 12;
-    resultsHTML += `<p><strong>${translations[currentLang].retirementObjective}</strong> ${years} ${currentLang === 'fr' ? "an(s) et" : "year(s) and"} ${months} ${currentLang === 'fr' ? "mois." : "month(s)."}</p>`;
+    resultsHTML += `<p style="padding-bottom:25px;"><strong>${translations[currentLang].retirementObjective}</strong> ${years} ${currentLang === 'fr' ? "an(s) et" : "year(s) and"} ${months} ${currentLang === 'fr' ? "mois." : "month(s)."}</p>`;
   } else {
-    resultsHTML += `<p><strong>${translations[currentLang].retirementNotReached}</strong> ${currentLang === 'fr' ? "dans la durée simulée." : "within the simulated period."}</p>`;
+    resultsHTML += `<p style="padding-bottom:25px;"><strong>${translations[currentLang].retirementNotReached}</strong> ${currentLang === 'fr' ? "dans la durée simulée." : "within the simulated period."}</p>`;
   }
   
   // Tableau récapitulatif avec pagination
-  resultsHTML += `<h3 class='nb-heading'>${translations[currentLang].annualSummary}</h3>`;
-  resultsHTML += `
-    <div id="tableContainer">
-      <table id="annualSummaryTable">
-        <thead>
-          <tr>
-            <th>${translations[currentLang].tableYear}</th>
-            <th>${translations[currentLang].tableHP}</th>
-            <th>${translations[currentLang].tableHPInterest}</th>
-            <th>${translations[currentLang].tableHBD}</th>
-            <th>${translations[currentLang].tableHBDInterest}</th>
-            <th>${translations[currentLang].tableTotal}</th>
-          </tr>
-        </thead>
+ 
+
+  resultsHTML += `<h3 class='nb-heading nb-header'>${translations[currentLang].annualSummary}</h3>`;
+resultsHTML += `
+  <div class="table-wrapper">
+    <table id="annualSummaryTable" class="responsive-table">
+      <thead>
+        <tr>
+          <th>${translations[currentLang].tableYear}</th>
+          <th>${translations[currentLang].tableHP}</th>
+          <th>${translations[currentLang].tableHPInterest}</th>
+          <th>${translations[currentLang].tableHBD}</th>
+          <th>${translations[currentLang].tableHBDInterest}</th>
+          <th>${translations[currentLang].tableTotal}</th>
+        </tr>
+      </thead>
         <tbody>
           ${snapshots.map(snapshot => `
             <tr>
@@ -121,16 +123,16 @@ document.getElementById("simulationForm").addEventListener("submit", function(ev
             </tr>
           `).join('')}
         </tbody>
-      </table>
-      <div id="pagination" class="pagination">
-        <!-- Les boutons de pagination seront ajoutés dynamiquement -->
-      </div>
-    </div>
-  `;
+    </table>
+  </div>
+  <div id="pagination" class="pagination">
+    <!-- Les boutons de pagination seront ajoutés dynamiquement -->
+  </div>
+`;
   
   // Graphique avec Plotly
   resultsHTML += `
-    <h3 class='nb-heading'>${translations[currentLang].chartTitle}</h3>
+    <h3 class='nb-heading nb-header'>${translations[currentLang].chartTitle}</h3>
     <div id="chartContainer" style="width: 100%; height: 400px;"></div>
   `;
   
@@ -255,30 +257,57 @@ document.getElementById("simulationForm").addEventListener("submit", function(ev
     
     function updatePaginationButtons(currentPage) {
       pagination.innerHTML = '';
+    
+      // Bouton Précédent
       if (currentPage > 1) {
         const prevButton = document.createElement('button');
         prevButton.textContent = currentLang === 'fr' ? "Précédent" : "Previous";
-        prevButton.classList.add('nb-btn');
+        prevButton.classList.add('nb-btn', 'nav-btn');
         prevButton.onclick = () => showPage(currentPage - 1);
         pagination.appendChild(prevButton);
       }
-      for (let i = 1; i <= totalPages; i++) {
-        const pageButton = document.createElement('button');
-        pageButton.textContent = i;
-        pageButton.classList.add('nb-btn');
-        pageButton.style.margin = '0 5px';
-        pageButton.style.backgroundColor = i === currentPage ? 'var(--accent-color)' : 'var(--primary-color)';
-        pageButton.onclick = () => showPage(i);
-        pagination.appendChild(pageButton);
+    
+      // Vérifier la taille de l'écran pour afficher soit les numéros, soit uniquement les boutons de navigation
+      if (window.innerWidth >= 768) {
+        // Affichage complet pour desktop (boutons numérotés)
+        for (let i = 1; i <= totalPages; i++) {
+          // Afficher toujours la première, la dernière et les pages autour de la page actuelle
+          if (
+              i === 1 || 
+              i === totalPages || 
+              i === currentPage || 
+              i === currentPage - 1 || 
+              i === currentPage + 1
+          ) {
+              const pageButton = document.createElement('button');
+              pageButton.textContent = i;
+              pageButton.classList.add('nb-btn');
+              if (i === currentPage) {
+                  pageButton.classList.add('current-page');
+              }
+              pageButton.onclick = () => showPage(i);
+              pagination.appendChild(pageButton);
+          } else if (i === currentPage - 2 || i === currentPage + 2) {
+              // Ajouter des points de suspension
+              const ellipsis = document.createElement('span');
+              ellipsis.textContent = '...';
+              ellipsis.style.margin = '0 4px';
+              pagination.appendChild(ellipsis);
+          }
+        }
       }
+      // Sur mobile, on n'affiche que Précédent et Suivant (les numéros ne seront pas ajoutés)
+    
+      // Bouton Suivant
       if (currentPage < totalPages) {
         const nextButton = document.createElement('button');
         nextButton.textContent = currentLang === 'fr' ? "Suivant" : "Next";
-        nextButton.classList.add('nb-btn');
+        nextButton.classList.add('nb-btn', 'nav-btn');
         nextButton.onclick = () => showPage(currentPage + 1);
         pagination.appendChild(nextButton);
       }
     }
+    
     
     showPage(1);
   }

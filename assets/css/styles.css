@@ -1,63 +1,89 @@
-/* Neo-Brutalist CSS */
+/* --------------------------------
+   1. Variables & Reset
+-------------------------------- */
 :root {
     --primary-color: #000000;
     --background-color: #f4f4f4;
     --accent-color: #ff5733;
     --text-color: #000000;
     --border-width: 3px;
+    --container-padding: clamp(15px, 3vw, 30px);
+    --heading-font-size: clamp(1.25rem, 4vw, 2rem);
+    --shadow-offset: 8px;
+    --transition-speed: 0.2s;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
-  }
-  
+    margin: 0;
+    padding: 0;
+}
 
+/* --------------------------------
+     2. Base Styles
+  -------------------------------- */
 body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     background-color: var(--background-color);
     color: var(--text-color);
     line-height: 1.6;
-    margin: 0;
-    padding: 20px;
-    box-sizing: border-box;
+    padding: clamp(10px, 2vw, 20px);
 }
 
+/* --------------------------------
+     3. Layout Components
+  -------------------------------- */
 .container {
     max-width: 1200px;
     margin: 0 auto;
     background-color: white;
     border: var(--border-width) solid var(--primary-color);
-    box-shadow: 10px 10px 0 var(--primary-color);
-    padding: 30px;
-}
-
-.nb-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: var(--border-width) solid var(--primary-color);
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-}
-
-.nb-heading {
-    font-size: 2rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    border-bottom: var(--border-width) solid var(--primary-color);
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--primary-color);
+    padding: var(--container-padding);
+    width: 100%;
 }
 
 .nb-card {
     background-color: white;
     border: var(--border-width) solid var(--primary-color);
-    box-shadow: 8px 8px 0 var(--primary-color);
-    padding: 25px;
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--primary-color);
+    padding: 8px;
     margin-bottom: 20px;
     position: relative;
 }
 
+/* --------------------------------
+     4. Header Styles
+  -------------------------------- */
+.nb-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: var(--border-width) solid var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.nb-heading {
+    font-size: var(--heading-font-size);
+    font-weight: 900;
+    text-transform: uppercase;
+    width: 100%;
+    word-wrap: break-word;
+}
+
+#lang-toggle {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+}
+
+/* --------------------------------
+     5. Form Elements
+  -------------------------------- */
 .nb-form {
     display: flex;
     flex-direction: column;
@@ -73,37 +99,68 @@ body {
 }
 
 .nb-input {
-    box-sizing: border-box;
     width: 100%;
-    padding: 10px;
+    min-height: 44px;
+    padding: 10px 15px;
     border: var(--border-width) solid var(--primary-color);
     background-color: white;
     font-size: 1rem;
     outline: none;
-    transition: all 0.2s;
-  }
-  
+    transition: all var(--transition-speed);
+}
 
 .nb-input:focus {
     box-shadow: 4px 4px 0 var(--accent-color);
+}
+
+.nb-input:invalid {
+    border-color: red;
+    box-shadow: 4px 4px 0 rgba(255, 0, 0, 0.5);
 }
 
 .nb-btn {
     background-color: var(--primary-color);
     color: white;
     border: var(--border-width) solid var(--primary-color);
-    padding: 12px 25px;
+    padding: 10px 15px;
     font-size: 1rem;
     font-weight: bold;
     text-transform: uppercase;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all var(--transition-speed);
     box-shadow: 6px 6px 0 var(--accent-color);
+    width: 100%;
+    min-height: 44px;
+    white-space: normal;
 }
 
 .nb-btn:hover {
     background-color: var(--accent-color);
     box-shadow: 4px 4px 0 var(--primary-color);
+}
+
+/* --------------------------------
+     6. Form Layout Components
+  -------------------------------- */
+.parameter-section {
+    border: 2px solid var(--primary-color);
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #fafafa;
+}
+
+.parameter-section h3 {
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    font-weight: bold;
+    margin: -15px -15px 15px -15px;
+    padding: 8px 15px;
+    background-color: var(--primary-color);
+    color: white;
+    text-transform: uppercase;
+}
+
+.form-group {
+    margin-bottom: 1rem;
 }
 
 .form-note {
@@ -112,17 +169,28 @@ body {
     margin-top: 5px;
 }
 
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+/* --------------------------------
+     7. Table Styles
+  -------------------------------- */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1rem;
+}
+
 table {
     width: 100%;
+    min-width: 500px;
     border-collapse: separate;
     border-spacing: 0;
     margin-top: 20px;
-}
-
-table,
-th,
-td {
-    border: var(--border-width) solid var(--primary-color);
 }
 
 th,
@@ -130,6 +198,7 @@ td {
     padding: 12px;
     text-align: center;
     background-color: white;
+    border: var(--border-width) solid var(--primary-color);
 }
 
 th {
@@ -139,94 +208,254 @@ th {
     font-weight: bold;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .container {
-        padding: 15px;
+/* --------------------------------
+     8. Utilities
+  -------------------------------- */
+/* Pagination Container */
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    margin: 1.5rem 0;
+    padding: 0 var(--container-padding);
+}
+
+/* Pagination Buttons */
+.pagination .nb-btn {
+    min-width: auto;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    margin: 0;
+}
+
+/* Current Page Button */
+.pagination .nb-btn.current-page {
+    background-color: var(--accent-color);
+    box-shadow: 4px 4px 0 var(--primary-color);
+}
+
+/* Navigation Buttons (Prev/Next) */
+.pagination .nb-btn.nav-btn {
+    min-width: 90px;
+}
+
+/* Mobile Optimization */
+@media screen and (max-width: 768px) {
+    .pagination {
+        gap: 6px;
+        padding: 0;
     }
 
-    .nb-heading {
-        font-size: 1.5rem;
+    /* Hide some page numbers on mobile */
+    .pagination .nb-btn:not(.nav-btn):not(.current-page) {
+        display: none;
     }
 
-    .nb-input,
-    .nb-btn {
-        width: 100%;
+    /* Show ellipsis for first and last pages */
+    .pagination .nb-btn:nth-child(2):not(.current-page),
+    .pagination .nb-btn:nth-last-child(2):not(.current-page) {
+        display: inline-flex;
+    }
+
+    .pagination .nb-btn {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+    }
+
+    .pagination .nb-btn.nav-btn {
+        min-width: auto;
+        padding: 6px 12px;
     }
 }
 
-/* Form validation and error states */
-.nb-input:invalid {
-    border-color: red;
-    box-shadow: 4px 4px 0 rgba(255, 0, 0, 0.5);
+/* Extra Small Screens */
+@media screen and (max-width: 400px) {
+    .pagination .nb-btn.nav-btn {
+        padding: 6px 8px;
+    }
+    
+    .pagination .nb-btn {
+        min-height: 36px;
+    }
 }
 
-/* Placeholder styling */
+#chartContainer {
+    border: var(--border-width) solid var(--primary-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--accent-color);
+    background-color: white;
+    margin-bottom: 20px;
+}
+
 ::placeholder {
     color: #999;
     opacity: 0.7;
 }
 
-/* Style pour le toggle de langue */
-#lang-toggle {
-    display: flex;
-    gap: 10px;
+/* --------------------------------
+     9. Media Queries
+  -------------------------------- */
+
+  /* Styles pour desktop (≥768px) */
+@media (min-width: 768px) {
+    .nb-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    #lang-toggle {
+        width: auto;
+        justify-content: flex-end;
+    }
+
+    .nb-btn {
+        width: auto;
+    }
+
+    .nb-card {
+        padding: 25px;
+    }
+}
+/* --------------------------------
+   9. Media Queries
+-------------------------------- */
+/* Styles pour tablettes et plus (≥576px) */
+@media (min-width: 576px) {
+    .input-group {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .input-group .nb-input {
+        flex: 1;
+    }
+
+    .input-group .nb-btn {
+        width: auto;
+    }
 }
 
-#lang-toggle .nb-btn {
-    margin-right: 10px;
-}
-
-/* Pagination */
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-}
-
-.pagination .nb-btn {
-    margin: 0 5px;
-    padding: 8px 16px;
-}
-
-.input-group {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+/* Table Container Styles */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1.5rem;
+    border: var(--border-width) solid var(--primary-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--primary-color);
+    background: white;
   }
   
-  .input-group .nb-input {
-    flex: 1;
+  /* Table Styles */
+  .responsive-table {
+    width: 100%;
+    min-width: 750px;
+    margin: 0;
+    border-collapse: collapse;
   }
   
-
-/* Style pour le conteneur du graphique */
-#chartContainer {
-    border: 3px solid var(--primary-color);
-    box-shadow: 8px 8px 0 var(--accent-color);
-    background-color: white;
-    margin-bottom: 20px;
-}
-
-.parameter-section {
-    border: 2px solid var(--primary-color);
-    padding: 20px;
-    margin-bottom: 20px;
-    background-color: #fafafa;
-}
-
-.parameter-section h3 {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin: -20px -20px 20px -20px;
-    padding: 10px 20px;
+  .responsive-table th,
+  .responsive-table td {
+    padding: 12px;
+    text-align: right;
+    border: 1px solid var(--primary-color);
+  }
+  
+  .responsive-table th:first-child,
+  .responsive-table td:first-child {
+    text-align: left;
+    position: sticky;
+    left: 0;
+    background: inherit;
+    z-index: 1;
+    background-color: var(--accent-color); 
+    color: white !important;
+  }
+  
+  .responsive-table th {
     background-color: var(--primary-color);
     color: white;
+    font-weight: bold;
     text-transform: uppercase;
-}
+    white-space: nowrap;
+  }
+  
+  .responsive-table td {
+    background-color: white;
+  }
+  
+  /* Mobile optimizations */
+  @media screen and (max-width: 768px) {
+    .table-wrapper {
+      margin-right: -15px;
+      width: calc(100% + 15px);
+      border-left: none;
+      border-right: none;
+      box-shadow: none;
+    }
+    
+    .responsive-table th,
+    .responsive-table td {
+      padding: 8px;
+      font-size: 0.9rem;
+    }
+  }
+  
+  /* Custom scrollbar for better UX */
+  .table-wrapper::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  .table-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+  
+  .table-wrapper::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+  }
+  
+  .table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-color);
+  }
 
-.parameter-section:last-of-type {
-    margin-bottom: 30px;
-}
-
+  @media screen and (max-width: 768px) {
+    /* Espace autour du conteneur principal */
+    .container {
+      padding: 15px;
+    }
+  
+    /* Espacement entre les cartes */
+    .nb-card {
+      margin-bottom: 25px; /* augmente l'espace entre les cartes */
+      padding: 15px;       /* ajoute un padding interne plus généreux */
+    }
+  
+    /* Espacement dans l'en-tête */
+    .nb-header {
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+    }
+  
+    /* Espacement pour les sections de paramètres */
+    .parameter-section {
+      margin-bottom: 20px;
+      padding: 15px;
+    }
+  
+    /* Ajustement des formulaires */
+    .nb-form {
+      gap: 20px;
+    }
+  
+    /* Optionnel : augmenter l'espacement entre les boutons de pagination */
+    .pagination {
+      margin: 1.5rem 0;
+      gap: 10px;
+    }
+  }
+  
